@@ -1,0 +1,29 @@
+name: simple-sdn
+topology:
+  nodes:
+    spine1:
+      kind: ovs-bridge
+
+    leaf1:
+      kind: ovs-bridge
+
+    leaf2:
+      kind: ovs-bridge
+
+    h1:
+      kind: linux
+      image: wbitt/network-multitool:alpine-minimal
+      exec:
+        - ip link set dev eth1 address 00:00:00:00:00:01
+        - ip addr add 192.168.1.1/24 dev eth1
+
+    h2:
+      kind: linux
+      image: wbitt/network-multitool:alpine-minimal
+      exec:
+        - ip link set dev eth1 address 00:00:00:00:00:02
+        - ip addr add 192.168.1.2/24 dev eth1
+
+  links:
+    - endpoints: ["leaf1:h1", "h1:eth1"]
+    - endpoints: ["leaf2:h2", "h2:eth1"] 
